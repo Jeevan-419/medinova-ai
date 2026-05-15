@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
@@ -18,11 +17,8 @@ const app = express();
 // Security Middleware
 app.use(helmet());
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500, // increased to support image processing requests
-});
-app.use('/api', limiter);
+// Rate limiting removed for Vercel Serverless compatibility
+// Vercel handles DDoS protection natively at the edge.
 
 // General Middleware
 app.use(express.json({ limit: '50mb' }));
