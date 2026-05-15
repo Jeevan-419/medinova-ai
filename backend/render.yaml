@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: healthcare-api
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false # Set this securely in the Render Dashboard
+      - key: JWT_SECRET
+        sync: false # Set this securely in the Render Dashboard
