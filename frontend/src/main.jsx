@@ -5,8 +5,8 @@ import { AuthProvider } from './context/AuthContext';
 import axios from 'axios';
 
 // Configure global Axios Base URL
-// In Vercel, relative paths point to the serverless function.
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || '/api';
+// In Vercel production, strictly use the relative '/api' path. In development, fallback to localhost.
+axios.defaults.baseURL = import.meta.env.PROD ? '/api' : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api');
 import './index.css'
 import App from './App.jsx'
 

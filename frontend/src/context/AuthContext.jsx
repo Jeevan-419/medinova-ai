@@ -43,10 +43,28 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
-    const res = await axios.post('/auth/register', userData);
-    setToken(res.data.token);
-    setUser(res.data.user);
-    return res.data.user;
+    try {
+      console.log('Initiating registration request to:', axios.defaults.baseURL + '/auth/register');
+      const res = await axios.post('/auth/register', userData);
+      console.log('Registration successful:', res.data);
+      setToken(res.data.token);
+      setUser(res.data.user);
+      return res.data.user;
+    } catch (error) {
+      console.error('Registration API Error:', error);
+      if (error.response) {
+        // The request was made and the server responded with a status code outside of 2xx
+        console.error('Server Response Data:', error.response.data);
+        console.error('Server Response Status:', error.response.status);
+      } else if (error.request) {
+        // The request was made but no response was received (Network error, CORS, 404 router drop)
+        console.error('No response received (Network/CORS Error):', error.request);
+      } else {
+        // Something happened in setting up the request
+        console.error('Request Setup Error:', error.message);
+      }
+      throw error; // Re-throw to be caught by Register.jsx
+    }
   };
 
   const logout = () => {

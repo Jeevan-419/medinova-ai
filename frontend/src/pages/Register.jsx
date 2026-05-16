@@ -21,7 +21,25 @@ const Register = () => {
       else if (user.role === 'Doctor') navigate('/doctor');
       else navigate('/patient');
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      console.error("Full Registration Error:", err);
+      let errorMessage = 'Registration failed. Please try again.';
+      
+      // Handle known backend error response
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } 
+      // Handle Vercel 500 HTML responses or CORS/Network issues
+      else if (err.message === 'Network Error') {
+        errorMessage = 'Network Error: Cannot reach the backend. Check your Vercel/MongoDB connection.';
+      } else if (err.response?.status >= 500) {
+        errorMessage = 'Server Error: The backend crashed (Likely a MongoDB connection issue). Check Vercel logs.';
+      } else if (err.response?.status === 404) {
+        errorMessage = '404 API Not Found: Vercel routing is failing to reach the backend.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     }
   };
 
